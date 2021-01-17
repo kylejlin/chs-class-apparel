@@ -1,5 +1,5 @@
 import { Emitter, Particle } from "./particles";
-import { chance, randFloat, randSym } from "./rand";
+import { chance, fromMean, randFloat, randSym } from "./rand";
 
 export function getTypeAEmitter(ex: number, ey: number): Emitter {
   const emitterX = ex;
@@ -20,7 +20,7 @@ export function getTypeAEmitter(ex: number, ey: number): Emitter {
           ay: 0,
 
           radius: 10,
-          vRadius: randFloat(0.1, 1),
+          vRadius: fromMean(0.5, 0.5),
 
           r: 255,
           g: 255,
