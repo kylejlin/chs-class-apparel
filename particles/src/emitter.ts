@@ -26,7 +26,7 @@ export function getType0Emitter(ex: number, ey: number): Emitter {
 
       let i = 10;
       while (--i) {
-        if (!chance(0.11 * 3)) {
+        if (!chance(0.11 * 5)) {
           continue;
         }
 
@@ -50,12 +50,12 @@ export function getType0Emitter(ex: number, ey: number): Emitter {
           vRadius: fromMean(0.25, 0.25),
 
           r: 200,
-          g: 180,
-          b: 100,
-          a: ~~randFloat(180, 200) * 0.6,
+          g: 120,
+          b: 50,
+          a: ~~randFloat(180, 200),
 
-          vr: 20 * c,
-          vg: 10 * c,
+          vr: 40 * c,
+          vg: 15 * c,
           vb: 5 * c,
           va: -randFloat(7, 10),
         });
