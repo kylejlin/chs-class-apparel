@@ -26,7 +26,7 @@ export function getType0Emitter(ex: number, ey: number): Emitter {
 
       let i = 10;
       while (--i) {
-        if (!chance(0.08)) {
+        if (!chance(0.11)) {
           continue;
         }
 
