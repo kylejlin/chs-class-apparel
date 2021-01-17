@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import { startAnimationLoop } from "./particles";
+import { SceneModifier, startAnimationLoop } from "./particles";
 
 export class App extends React.Component<{}, State> {
   private canvasRef: React.RefObject<HTMLCanvasElement>;
@@ -11,7 +11,11 @@ export class App extends React.Component<{}, State> {
     // @ts-ignore
     window.app = this;
 
-    this.state = { canvasCoords: [] };
+    this.state = {
+      canvasCoords: [],
+      shouldAddEmitter: false,
+      sceneModifier: undefined,
+    };
 
     this.canvasRef = React.createRef();
 
@@ -23,11 +27,37 @@ export class App extends React.Component<{}, State> {
   }
 
   componentDidMount(): void {
+    this.addEventListeners();
+    this.startAnimationLoop();
+  }
+
+  startAnimationLoop(): void {
     const canvas = this.canvasRef.current;
     if (canvas === null) {
       throw new Error("Cannot find canvas.");
     }
-    startAnimationLoop(canvas);
+    const modifier = startAnimationLoop(canvas);
+    this.setState({ sceneModifier: modifier });
+  }
+
+  addEventListeners(): void {
+    window.addEventListener("keydown", (event: KeyboardEvent): void => {
+      if (event.key === "e") {
+        this.setState({ shouldAddEmitter: true });
+      }
+    });
+
+    window.addEventListener("keyup", (event: KeyboardEvent): void => {
+      if (event.key === "e") {
+        this.setState({ shouldAddEmitter: false });
+      }
+    });
+
+    window.addEventListener("keypress", (event: KeyboardEvent): void => {
+      if (event.key === "r") {
+        this.state.sceneModifier?.popEmitter();
+      }
+    });
   }
 
   render(): React.ReactElement {
@@ -59,23 +89,33 @@ export class App extends React.Component<{}, State> {
       const rect = (event.target as HTMLCanvasElement).getBoundingClientRect();
       const localX = clientX - rect.left;
       const localY = clientY - rect.top;
-      this.setState(
-        (prevState) => ({
-          canvasCoords: prevState.canvasCoords.concat([
-            { x: localX, y: localY },
-          ]),
-        }),
-        () => {
-          console.log("after addition", this.state.canvasCoords);
-          window.alert(
-            "x: " + Math.round(localX) + ", y: " + Math.round(localY)
-          );
-        }
-      );
+
+      this.addEmitterIfNeeded(localX, localY);
+      this.logCoordinates(localX, localY);
+    }
+  }
+
+  logCoordinates(localX: number, localY: number): void {
+    this.setState(
+      (prevState) => ({
+        canvasCoords: prevState.canvasCoords.concat([{ x: localX, y: localY }]),
+      }),
+      () => {
+        console.log("after addition", this.state.canvasCoords);
+        window.alert("x: " + Math.round(localX) + ", y: " + Math.round(localY));
+      }
+    );
+  }
+
+  addEmitterIfNeeded(localX: number, localY: number): void {
+    if (this.state.shouldAddEmitter) {
+      this.state.sceneModifier?.pushEmitter(0, localX, localY);
     }
   }
 }
 
 export interface State {
   canvasCoords: { x: number; y: number }[];
+  shouldAddEmitter: boolean;
+  sceneModifier: undefined | SceneModifier;
 }

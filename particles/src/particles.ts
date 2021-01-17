@@ -1,7 +1,6 @@
-import { emit } from "process";
-import { chance, randFloat, randSym } from "./rand";
+import { getTypeAEmitter } from "./emitterFactories";
 
-export function startAnimationLoop(canvas: HTMLCanvasElement): void {
+export function startAnimationLoop(canvas: HTMLCanvasElement): SceneModifier {
   const TAU = 2 * Math.PI;
 
   const WIDTH = canvas.width;
@@ -97,6 +96,20 @@ export function startAnimationLoop(canvas: HTMLCanvasElement): void {
   }
 
   main();
+
+  return getSceneModifier();
+
+  function getSceneModifier(): SceneModifier {
+    return { pushEmitter, popEmitter };
+
+    function pushEmitter(type: 0, x: number, y: number): void {
+      emitters.push(getTypeAEmitter(x, y));
+    }
+
+    function popEmitter(): void {
+      emitters.pop();
+    }
+  }
 }
 
 function getConfig() {
@@ -135,38 +148,6 @@ function getEmitters(): Emitter[] {
     getTypeAEmitter(263, 177),
     getTypeAEmitter(285, 189),
   ];
-
-  function getTypeAEmitter(ex: number, ey: number): Emitter {
-    const emitterX = ex;
-    const emitterY = ey;
-    return {
-      emit(): Particle[] {
-        return [
-          {
-            x: emitterX,
-            y: emitterY,
-            vx: randSym(3),
-            vy: randSym(3),
-            ax: 0,
-            ay: 0,
-
-            radius: 10,
-            vRadius: randFloat(0.1, 1),
-
-            r: 255,
-            g: 255,
-            b: 255,
-            a: 255,
-
-            vr: 0,
-            vg: 0,
-            vb: 0,
-            va: -randFloat(15, 20),
-          },
-        ];
-      },
-    };
-  }
 }
 
 interface Rgba {
@@ -188,4 +169,9 @@ function getStyle(color: Rgba): string {
     color.a / 255 +
     ")"
   );
+}
+
+export interface SceneModifier {
+  pushEmitter(type: 0, localX: number, localy: number): void;
+  popEmitter(): void;
 }
