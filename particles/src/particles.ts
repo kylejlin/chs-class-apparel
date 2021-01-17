@@ -11,7 +11,7 @@ export function startAnimationLoop(
   const config = getConfig();
 
   const ctx = canvas.getContext("2d")!;
-  const emitters: Emitter[] = getEmitters().concat(addedEmitters.map(fromSpec));
+  const emitters: Emitter[] = addedEmitters.map(fromSpec);
   const particles: Particle[] = [];
   let paused = false;
   let shouldEmit = true;
@@ -145,15 +145,6 @@ export interface Particle {
   vg: number;
   vb: number;
   va: number;
-}
-
-function getEmitters(): Emitter[] {
-  return [
-    getType0Emitter(200, 200),
-    getType0Emitter(235, 187),
-    getType0Emitter(263, 177),
-    getType0Emitter(285, 189),
-  ];
 }
 
 interface Rgba {
