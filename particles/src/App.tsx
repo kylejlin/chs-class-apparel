@@ -12,9 +12,8 @@ export class App extends React.Component<{}, State> {
     window.app = this;
 
     this.state = {
-      loggedCanvasCoordinates: [],
+      addedEmitterCoordinates: [],
       shouldAddEmitter: false,
-      shouldLogCoordinates: false,
       sceneModifier: undefined,
     };
 
@@ -45,23 +44,37 @@ export class App extends React.Component<{}, State> {
     window.addEventListener("keydown", (event: KeyboardEvent): void => {
       if (event.key === "e") {
         this.setState({ shouldAddEmitter: true });
-      } else if (event.key === "l") {
-        this.setState({ shouldLogCoordinates: true });
       }
     });
     window.addEventListener("keyup", (event: KeyboardEvent): void => {
       if (event.key === "e") {
         this.setState({ shouldAddEmitter: false });
-      } else if (event.key === "l") {
-        this.setState({ shouldLogCoordinates: false });
       }
     });
 
     window.addEventListener("keypress", (event: KeyboardEvent): void => {
       if (event.key === "r") {
-        this.state.sceneModifier?.popEmitter();
+        this.removeEmitter();
       }
     });
+  }
+
+  removeEmitter(): void {
+    if (this.state.addedEmitterCoordinates.length > 0) {
+      this.setState(
+        (prevState) => ({
+          addedEmitterCoordinates: prevState.addedEmitterCoordinates.slice(
+            0,
+            -1
+          ),
+        }),
+        () => {
+          this.state.sceneModifier?.popEmitter();
+        }
+      );
+    } else {
+      alert("No user-added emitters to remove.");
+    }
   }
 
   render(): React.ReactElement {
@@ -82,13 +95,13 @@ export class App extends React.Component<{}, State> {
     if (altKey) {
       this.setState(
         (prevState) => ({
-          loggedCanvasCoordinates: prevState.loggedCanvasCoordinates.slice(
+          addedEmitterCoordinates: prevState.addedEmitterCoordinates.slice(
             0,
             -1
           ),
         }),
         () => {
-          console.log("after removal", this.state.loggedCanvasCoordinates);
+          console.log("after removal", this.state.addedEmitterCoordinates);
           window.alert("Removed previous point.");
         }
       );
@@ -98,38 +111,31 @@ export class App extends React.Component<{}, State> {
       const localY = clientY - rect.top;
 
       this.addEmitterIfNeeded(localX, localY);
-      this.logCoordinatesIfNeeded(localX, localY);
-    }
-  }
-
-  logCoordinatesIfNeeded(localX: number, localY: number): void {
-    if (this.state.shouldLogCoordinates) {
-      this.setState(
-        (prevState) => ({
-          loggedCanvasCoordinates: prevState.loggedCanvasCoordinates.concat([
-            { x: localX, y: localY },
-          ]),
-        }),
-        () => {
-          console.log("after addition", this.state.loggedCanvasCoordinates);
-          window.alert(
-            "x: " + Math.round(localX) + ", y: " + Math.round(localY)
-          );
-        }
-      );
     }
   }
 
   addEmitterIfNeeded(localX: number, localY: number): void {
     if (this.state.shouldAddEmitter) {
-      this.state.sceneModifier?.pushEmitter(0, localX, localY);
+      this.setState(
+        (prevState) => ({
+          addedEmitterCoordinates: prevState.addedEmitterCoordinates.concat([
+            { x: localX, y: localY },
+          ]),
+        }),
+        () => {
+          console.log(
+            "Latest emitter coordinates: ",
+            this.state.addedEmitterCoordinates
+          );
+          this.state.sceneModifier?.pushEmitter(0, localX, localY);
+        }
+      );
     }
   }
 }
 
 export interface State {
-  loggedCanvasCoordinates: { x: number; y: number }[];
+  addedEmitterCoordinates: { x: number; y: number }[];
   shouldAddEmitter: boolean;
-  shouldLogCoordinates: boolean;
   sceneModifier: undefined | SceneModifier;
 }
