@@ -22,12 +22,18 @@ export function getType0Emitter(ex: number, ey: number): Emitter {
   const emitterY = ey;
   return {
     emit(): Particle[] {
-      if (!chance(0.4)) {
-        return [];
-      }
+      const out: Particle[] = [];
 
-      return [
-        {
+      let i = 10;
+      while (--i) {
+        if (!chance(0.1)) {
+          continue;
+        }
+
+        const sat = ~~randFloat(150, 180);
+        const vsat = 30;
+
+        out.push({
           x: emitterX,
           y: emitterY,
           vx: randSym(3),
@@ -38,17 +44,19 @@ export function getType0Emitter(ex: number, ey: number): Emitter {
           radius: 10,
           vRadius: fromMean(0.5, 0.5),
 
-          r: 255,
-          g: 255,
-          b: 255,
-          a: 255,
+          r: sat,
+          g: sat,
+          b: sat,
+          a: ~~randFloat(200, 220),
 
-          vr: 0,
-          vg: 0,
-          vb: 0,
+          vr: vsat,
+          vg: vsat,
+          vb: vsat,
           va: -randFloat(15, 20),
-        },
-      ];
+        });
+      }
+
+      return out;
     },
   };
 }
