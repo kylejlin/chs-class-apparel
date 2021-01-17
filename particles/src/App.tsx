@@ -11,7 +11,7 @@ export class App extends React.Component<{}, State> {
     // @ts-ignore
     window.app = this;
 
-    this.state = {};
+    this.state = { canvasCoords: [] };
 
     this.canvasRef = React.createRef();
 
@@ -44,12 +44,38 @@ export class App extends React.Component<{}, State> {
   }
 
   onCanvasClick(event: React.MouseEvent<HTMLCanvasElement>): void {
-    const { clientX, clientY } = event;
-    const rect = (event.target as HTMLCanvasElement).getBoundingClientRect();
-    const localX = clientX - rect.left;
-    const localY = clientY - rect.top;
-    window.alert("x: " + Math.round(localX) + ", y: " + Math.round(localY));
+    const { clientX, clientY, altKey } = event;
+    if (altKey) {
+      this.setState(
+        (prevState) => ({
+          canvasCoords: prevState.canvasCoords.slice(0, -1),
+        }),
+        () => {
+          console.log("after removal", this.state.canvasCoords);
+          window.alert("Removed previous point.");
+        }
+      );
+    } else {
+      const rect = (event.target as HTMLCanvasElement).getBoundingClientRect();
+      const localX = clientX - rect.left;
+      const localY = clientY - rect.top;
+      this.setState(
+        (prevState) => ({
+          canvasCoords: prevState.canvasCoords.concat([
+            { x: localX, y: localY },
+          ]),
+        }),
+        () => {
+          console.log("after addition", this.state.canvasCoords);
+          window.alert(
+            "x: " + Math.round(localX) + ", y: " + Math.round(localY)
+          );
+        }
+      );
+    }
   }
 }
 
-export interface State {}
+export interface State {
+  canvasCoords: { x: number; y: number }[];
+}
