@@ -80,8 +80,7 @@ export function startAnimationLoop(
   }
 
   function draw(): void {
-    ctx.fillStyle = config.BACKGROUND;
-    ctx.fillRect(0, 0, WIDTH, HEIGHT);
+    ctx.clearRect(0, 0, WIDTH, HEIGHT);
 
     drawParticles();
   }
@@ -116,7 +115,7 @@ export function startAnimationLoop(
 }
 
 function getConfig() {
-  return { BACKGROUND: "black" } as const;
+  return {} as const;
 }
 
 export interface Particle {
