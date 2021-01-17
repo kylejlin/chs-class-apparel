@@ -26,16 +26,17 @@ export function getType0Emitter(ex: number, ey: number): Emitter {
 
       let i = 10;
       while (--i) {
-        if (!chance(0.11 * 2)) {
+        if (!chance(0.11 * 3)) {
           continue;
         }
 
-        const vx = randSym(1.7);
-        const vy = randSym(1.7);
+        const vx = randSym(1.9);
+        const vy = randSym(1.9);
 
         const a = -randFloat(0, 0.05);
         const b = -randFloat(0, 0.05);
         const c = 0.2;
+        const d = 1;
 
         out.push({
           x: emitterX,
@@ -45,13 +46,13 @@ export function getType0Emitter(ex: number, ey: number): Emitter {
           ax: a * vx,
           ay: b * vy,
 
-          radius: 10,
+          radius: 10 * d,
           vRadius: fromMean(0.25, 0.25),
 
           r: 200,
           g: 180,
           b: 100,
-          a: ~~randFloat(180, 200),
+          a: ~~randFloat(180, 200) * 0.6,
 
           vr: 20 * c,
           vg: 10 * c,
