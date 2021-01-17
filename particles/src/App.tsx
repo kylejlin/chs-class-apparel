@@ -12,8 +12,9 @@ export class App extends React.Component<{}, State> {
     window.app = this;
 
     this.state = {
-      canvasCoords: [],
+      loggedCanvasCoordinates: [],
       shouldAddEmitter: false,
+      shouldLogCoordinates: false,
       sceneModifier: undefined,
     };
 
@@ -44,12 +45,15 @@ export class App extends React.Component<{}, State> {
     window.addEventListener("keydown", (event: KeyboardEvent): void => {
       if (event.key === "e") {
         this.setState({ shouldAddEmitter: true });
+      } else if (event.key === "l") {
+        this.setState({ shouldLogCoordinates: true });
       }
     });
-
     window.addEventListener("keyup", (event: KeyboardEvent): void => {
       if (event.key === "e") {
         this.setState({ shouldAddEmitter: false });
+      } else if (event.key === "l") {
+        this.setState({ shouldLogCoordinates: false });
       }
     });
 
@@ -78,10 +82,13 @@ export class App extends React.Component<{}, State> {
     if (altKey) {
       this.setState(
         (prevState) => ({
-          canvasCoords: prevState.canvasCoords.slice(0, -1),
+          loggedCanvasCoordinates: prevState.loggedCanvasCoordinates.slice(
+            0,
+            -1
+          ),
         }),
         () => {
-          console.log("after removal", this.state.canvasCoords);
+          console.log("after removal", this.state.loggedCanvasCoordinates);
           window.alert("Removed previous point.");
         }
       );
@@ -91,20 +98,26 @@ export class App extends React.Component<{}, State> {
       const localY = clientY - rect.top;
 
       this.addEmitterIfNeeded(localX, localY);
-      this.logCoordinates(localX, localY);
+      this.logCoordinatesIfNeeded(localX, localY);
     }
   }
 
-  logCoordinates(localX: number, localY: number): void {
-    this.setState(
-      (prevState) => ({
-        canvasCoords: prevState.canvasCoords.concat([{ x: localX, y: localY }]),
-      }),
-      () => {
-        console.log("after addition", this.state.canvasCoords);
-        window.alert("x: " + Math.round(localX) + ", y: " + Math.round(localY));
-      }
-    );
+  logCoordinatesIfNeeded(localX: number, localY: number): void {
+    if (this.state.shouldLogCoordinates) {
+      this.setState(
+        (prevState) => ({
+          loggedCanvasCoordinates: prevState.loggedCanvasCoordinates.concat([
+            { x: localX, y: localY },
+          ]),
+        }),
+        () => {
+          console.log("after addition", this.state.loggedCanvasCoordinates);
+          window.alert(
+            "x: " + Math.round(localX) + ", y: " + Math.round(localY)
+          );
+        }
+      );
+    }
   }
 
   addEmitterIfNeeded(localX: number, localY: number): void {
@@ -115,7 +128,8 @@ export class App extends React.Component<{}, State> {
 }
 
 export interface State {
-  canvasCoords: { x: number; y: number }[];
+  loggedCanvasCoordinates: { x: number; y: number }[];
   shouldAddEmitter: boolean;
+  shouldLogCoordinates: boolean;
   sceneModifier: undefined | SceneModifier;
 }
