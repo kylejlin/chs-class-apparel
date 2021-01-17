@@ -1,6 +1,9 @@
-import { getTypeAEmitter } from "./emitterFactories";
+import { getType0Emitter, Emitter, EmitterSpec, fromSpec } from "./emitter";
 
-export function startAnimationLoop(canvas: HTMLCanvasElement): SceneModifier {
+export function startAnimationLoop(
+  canvas: HTMLCanvasElement,
+  addedEmitters: EmitterSpec[]
+): SceneModifier {
   const TAU = 2 * Math.PI;
 
   const WIDTH = canvas.width;
@@ -8,7 +11,7 @@ export function startAnimationLoop(canvas: HTMLCanvasElement): SceneModifier {
   const config = getConfig();
 
   const ctx = canvas.getContext("2d")!;
-  const emitters: Emitter[] = getEmitters();
+  const emitters: Emitter[] = getEmitters().concat(addedEmitters.map(fromSpec));
   const particles: Particle[] = [];
   let paused = false;
 
@@ -103,7 +106,7 @@ export function startAnimationLoop(canvas: HTMLCanvasElement): SceneModifier {
     return { pushEmitter, popEmitter };
 
     function pushEmitter(type: 0, x: number, y: number): void {
-      emitters.push(getTypeAEmitter(x, y));
+      emitters.push(getType0Emitter(x, y));
     }
 
     function popEmitter(): void {
@@ -114,10 +117,6 @@ export function startAnimationLoop(canvas: HTMLCanvasElement): SceneModifier {
 
 function getConfig() {
   return { BACKGROUND: "black" } as const;
-}
-
-export interface Emitter {
-  emit(): Particle[];
 }
 
 export interface Particle {
@@ -143,10 +142,10 @@ export interface Particle {
 
 function getEmitters(): Emitter[] {
   return [
-    getTypeAEmitter(200, 200),
-    getTypeAEmitter(235, 187),
-    getTypeAEmitter(263, 177),
-    getTypeAEmitter(285, 189),
+    getType0Emitter(200, 200),
+    getType0Emitter(235, 187),
+    getType0Emitter(263, 177),
+    getType0Emitter(285, 189),
   ];
 }
 

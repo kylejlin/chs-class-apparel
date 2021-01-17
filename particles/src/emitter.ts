@@ -1,7 +1,23 @@
-import { Emitter, Particle } from "./particles";
+import { Particle } from "./particles";
 import { chance, fromMean, randFloat, randSym } from "./rand";
 
-export function getTypeAEmitter(ex: number, ey: number): Emitter {
+export interface EmitterSpec {
+  type: 0;
+  x: number;
+  y: number;
+}
+
+export interface Emitter {
+  emit(): Particle[];
+}
+
+export function fromSpec(spec: EmitterSpec): Emitter {
+  switch (spec.type) {
+    case 0:
+      return getType0Emitter(spec.x, spec.y);
+  }
+}
+export function getType0Emitter(ex: number, ey: number): Emitter {
   const emitterX = ex;
   const emitterY = ey;
   return {

@@ -1,6 +1,8 @@
 import React from "react";
 import "./App.css";
+import { EmitterSpec } from "./emitter";
 import { SceneModifier, startAnimationLoop } from "./particles";
+import { getSavedEmitters, saveEmitters } from "./saveEmitters";
 
 export class App extends React.Component<{}, State> {
   private canvasRef: React.RefObject<HTMLCanvasElement>;
@@ -12,7 +14,7 @@ export class App extends React.Component<{}, State> {
     window.app = this;
 
     this.state = {
-      addedEmitterCoordinates: [],
+      addedEmitters: getSavedEmitters(),
       shouldAddEmitter: false,
       sceneModifier: undefined,
     };
@@ -36,7 +38,7 @@ export class App extends React.Component<{}, State> {
     if (canvas === null) {
       throw new Error("Cannot find canvas.");
     }
-    const modifier = startAnimationLoop(canvas);
+    const modifier = startAnimationLoop(canvas, this.state.addedEmitters);
     this.setState({ sceneModifier: modifier });
   }
 
@@ -60,14 +62,15 @@ export class App extends React.Component<{}, State> {
   }
 
   removeEmitter(): void {
-    if (this.state.addedEmitterCoordinates.length > 0) {
+    if (this.state.addedEmitters.length > 0) {
       this.setState(
-        (prevState) => ({
-          addedEmitterCoordinates: prevState.addedEmitterCoordinates.slice(
-            0,
-            -1
-          ),
-        }),
+        (prevState) => {
+          const newEmitters = prevState.addedEmitters.slice(0, -1);
+          saveEmitters(newEmitters);
+          return {
+            addedEmitters: newEmitters,
+          };
+        },
         () => {
           this.state.sceneModifier?.popEmitter();
         }
@@ -95,13 +98,10 @@ export class App extends React.Component<{}, State> {
     if (altKey) {
       this.setState(
         (prevState) => ({
-          addedEmitterCoordinates: prevState.addedEmitterCoordinates.slice(
-            0,
-            -1
-          ),
+          addedEmitters: prevState.addedEmitters.slice(0, -1),
         }),
         () => {
-          console.log("after removal", this.state.addedEmitterCoordinates);
+          console.log("after removal", this.state.addedEmitters);
           window.alert("Removed previous point.");
         }
       );
@@ -117,16 +117,17 @@ export class App extends React.Component<{}, State> {
   addEmitterIfNeeded(localX: number, localY: number): void {
     if (this.state.shouldAddEmitter) {
       this.setState(
-        (prevState) => ({
-          addedEmitterCoordinates: prevState.addedEmitterCoordinates.concat([
-            { x: localX, y: localY },
-          ]),
-        }),
+        (prevState) => {
+          const newEmitters = prevState.addedEmitters.concat([
+            { type: 0, x: localX, y: localY },
+          ]);
+          saveEmitters(newEmitters);
+          return {
+            addedEmitters: newEmitters,
+          };
+        },
         () => {
-          console.log(
-            "Latest emitter coordinates: ",
-            this.state.addedEmitterCoordinates
-          );
+          console.log("Latest emitter coordinates: ", this.state.addedEmitters);
           this.state.sceneModifier?.pushEmitter(0, localX, localY);
         }
       );
@@ -135,7 +136,7 @@ export class App extends React.Component<{}, State> {
 }
 
 export interface State {
-  addedEmitterCoordinates: { x: number; y: number }[];
+  addedEmitters: EmitterSpec[];
   shouldAddEmitter: boolean;
   sceneModifier: undefined | SceneModifier;
 }
