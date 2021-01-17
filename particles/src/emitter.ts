@@ -36,7 +36,7 @@ export function getType0Emitter(ex: number, ey: number): Emitter {
         const a = -randFloat(0, 0.05);
         const b = -randFloat(0, 0.05);
         const c = 0.2;
-        const d = 1;
+        const d = 0.8;
 
         out.push({
           x: emitterX,
@@ -47,16 +47,16 @@ export function getType0Emitter(ex: number, ey: number): Emitter {
           ay: b * vy,
 
           radius: 10 * d,
-          vRadius: fromMean(0.25, 0.25),
+          vRadius: -fromMean(0.25, 0.25) * d,
 
-          r: 200,
-          g: 120,
-          b: 50,
-          a: ~~randFloat(180, 200),
+          r: 270,
+          g: 220,
+          b: 120,
+          a: ~~randFloat(180, 200) * 0.6,
 
-          vr: 40 * c,
-          vg: 15 * c,
-          vb: 5 * c,
+          vr: 20 * c,
+          vg: -5 * c,
+          vb: -5 * c,
           va: -randFloat(7, 10),
         });
       }
