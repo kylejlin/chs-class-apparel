@@ -1,3 +1,4 @@
+import { emit } from "process";
 import { chance, randFloat, randSym } from "./rand";
 
 export function startAnimationLoop(canvas: HTMLCanvasElement): void {
@@ -10,15 +11,33 @@ export function startAnimationLoop(canvas: HTMLCanvasElement): void {
   const ctx = canvas.getContext("2d")!;
   const emitters: Emitter[] = getEmitters();
   const particles: Particle[] = [];
+  let paused = false;
 
   function main(): void {
+    addEventListeners();
     tick();
   }
 
+  function addEventListeners(): void {
+    window.addEventListener("keydown", function (event: KeyboardEvent): void {
+      if (event.key === " ") {
+        paused = false;
+      }
+    });
+    window.addEventListener("keyup", function (event: KeyboardEvent): void {
+      if (event.key === " ") {
+        paused = true;
+      }
+    });
+  }
+
   function tick(): void {
-    emitParticles();
-    moveParticles();
-    draw();
+    if (!paused) {
+      emitParticles();
+      moveParticles();
+      draw();
+    }
+
     requestAnimationFrame(tick);
   }
 
@@ -111,14 +130,17 @@ export interface Particle {
 
 function getEmitters(): Emitter[] {
   return [
-    {
-      emit(): Particle[] {
-        const emitterX = 200;
-        const emitterY = 200;
-        if (!chance(0.8)) {
-          return [];
-        }
+    getTypeAEmitter(200, 200),
+    getTypeAEmitter(235, 187),
+    getTypeAEmitter(263, 177),
+    getTypeAEmitter(285, 189),
+  ];
 
+  function getTypeAEmitter(ex: number, ey: number): Emitter {
+    const emitterX = ex;
+    const emitterY = ey;
+    return {
+      emit(): Particle[] {
         return [
           {
             x: emitterX,
@@ -143,8 +165,8 @@ function getEmitters(): Emitter[] {
           },
         ];
       },
-    },
-  ];
+    };
+  }
 }
 
 interface Rgba {
