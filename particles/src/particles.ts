@@ -14,6 +14,7 @@ export function startAnimationLoop(
   const emitters: Emitter[] = getEmitters().concat(addedEmitters.map(fromSpec));
   const particles: Particle[] = [];
   let paused = false;
+  let shouldEmit = true;
 
   function main(): void {
     addEventListeners();
@@ -31,11 +32,18 @@ export function startAnimationLoop(
         paused = true;
       }
     });
+    window.addEventListener("keypress", function (event: KeyboardEvent): void {
+      if (event.key === "p") {
+        shouldEmit = !shouldEmit;
+      }
+    });
   }
 
   function tick(): void {
     if (!paused) {
-      emitParticles();
+      if (shouldEmit) {
+        emitParticles();
+      }
       moveParticles();
       draw();
     }
