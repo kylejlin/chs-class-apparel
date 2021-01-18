@@ -27,6 +27,8 @@ To use the app, [click here](https://kylejlin.github.io/chs-class-apparel/partic
   - `6` will load the ring
   - `7` will load "2021"
 
+- Press the `t` key to toggle the particle emitter types between orange particle emitters and yellow particle emitters.
+
 - To download an image of what you see on the screen, right click and then click "Save Image As", just as you would download an ordinary image.
 
   - The background of the downloaded image will be transparent.
