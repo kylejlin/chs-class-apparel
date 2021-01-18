@@ -42,3 +42,9 @@ npm start
 ## Create React App Attribution
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## License
+
+MIT
+
+Copyright (c) 2021 Kyle Lin
