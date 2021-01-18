@@ -1,8 +1,6 @@
 # Particles
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
-To view it, go to [https://kylejlin.github.io/chs-class-apparel/particles/](https://kylejlin.github.io/chs-class-apparel/particles/).
+To use the app, [click here](https://kylejlin.github.io/chs-class-apparel/particles/).
 
 ## Using the app
 
@@ -40,3 +38,7 @@ git clone https://github.com/kylejlin/chs-class-apparel.git
 cd chs-class-apparel/particles
 npm start
 ```
+
+## Create React App Attribution
+
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
