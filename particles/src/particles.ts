@@ -110,7 +110,13 @@ export function startAnimationLoop(
   return getSceneModifier();
 
   function getSceneModifier(): SceneModifier {
-    return { pushEmitter, popEmitter, loadPreset };
+    return {
+      pushEmitter,
+      popEmitter,
+      loadPreset,
+      invertEmitterTypes,
+      getEmitterSpecs,
+    };
 
     function pushEmitter(type: 0, x: number, y: number): void {
       emitters.push(getType0Emitter(x, y));
@@ -152,6 +158,34 @@ export function startAnimationLoop(
     function writeSpecs(specs: EmitterSpec[]): void {
       const newEmitters = specs.map(fromSpec);
       emitters.splice(0, emitters.length, ...newEmitters);
+    }
+
+    function invertEmitterTypes(): void {
+      const len = emitters.length;
+      for (let i = 0; i < len; ++i) {
+        const original = emitters[i];
+        const invertedType = invertType(original.spec.type);
+        const newSpec = {
+          type: invertedType,
+          x: original.spec.x,
+          y: original.spec.y,
+        };
+        const newEmitter = fromSpec(newSpec);
+        emitters[i] = newEmitter;
+      }
+    }
+
+    function invertType(type: 0 | 1): 0 | 1 {
+      switch (type) {
+        case 0:
+          return 1;
+        case 1:
+          return 0;
+      }
+    }
+
+    function getEmitterSpecs(): EmitterSpec[] {
+      return emitters.map((e) => e.spec);
     }
   }
 }
@@ -211,4 +245,6 @@ export interface SceneModifier {
   pushEmitter(type: 0, localX: number, localy: number): void;
   popEmitter(): void;
   loadPreset(type: EmitterPreset): EmitterSpec[];
+  invertEmitterTypes(): void;
+  getEmitterSpecs(): EmitterSpec[];
 }

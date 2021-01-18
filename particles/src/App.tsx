@@ -71,6 +71,14 @@ export class App extends React.Component<{}, State> {
     window.addEventListener("keypress", (event: KeyboardEvent): void => {
       if (event.key === "r") {
         this.removeEmitter();
+      } else if (event.key === "t") {
+        const { sceneModifier } = this.state;
+        if (sceneModifier !== undefined) {
+          sceneModifier.invertEmitterTypes();
+          const newSpecs = sceneModifier.getEmitterSpecs();
+          this.setState({ addedEmitters: newSpecs });
+          saveEmitters(newSpecs);
+        }
       }
     });
   }
