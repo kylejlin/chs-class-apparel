@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 import { EmitterSpec } from "./emitter";
-import { SceneModifier, startAnimationLoop } from "./particles";
+import { EmitterPreset, SceneModifier, startAnimationLoop } from "./particles";
 import { getSavedEmitters, saveEmitters } from "./saveEmitters";
 
 export class App extends React.Component<{}, State> {
@@ -46,6 +46,20 @@ export class App extends React.Component<{}, State> {
     window.addEventListener("keydown", (event: KeyboardEvent): void => {
       if (event.key === "e") {
         this.setState({ shouldAddEmitter: true });
+      } else if (event.key === "1") {
+        this.loadPreset("seniors");
+      } else if (event.key === "2") {
+        this.loadPreset("21");
+      } else if (event.key === "3") {
+        this.loadPreset("cupertino");
+      } else if (event.key === "4") {
+        this.loadPreset("high");
+      } else if (event.key === "5") {
+        this.loadPreset("school");
+      } else if (event.key === "6") {
+        this.loadPreset("ring");
+      } else if (event.key === "7") {
+        this.loadPreset("2021");
       }
     });
     window.addEventListener("keyup", (event: KeyboardEvent): void => {
@@ -59,6 +73,14 @@ export class App extends React.Component<{}, State> {
         this.removeEmitter();
       }
     });
+  }
+
+  loadPreset(preset: EmitterPreset): void {
+    const specs = this.state.sceneModifier?.loadPreset(preset);
+    if (specs !== undefined) {
+      this.setState({ addedEmitters: specs });
+      saveEmitters(specs);
+    }
   }
 
   removeEmitter(): void {

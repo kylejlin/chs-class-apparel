@@ -1,4 +1,6 @@
-export const _2021 = [
+import { EmitterSpec } from "../emitter";
+
+export const _2021: EmitterSpec[] = [
   { type: 0, x: 200, y: 200 },
   { type: 0, x: 235, y: 187 },
   { type: 0, x: 263, y: 177 },

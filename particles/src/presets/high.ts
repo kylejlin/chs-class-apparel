@@ -1,4 +1,6 @@
-export const high = [
+import { EmitterSpec } from "../emitter";
+
+export const high: EmitterSpec[] = [
   { type: 0, x: 178, y: 400 },
   { type: 0, x: 178, y: 418 },
   { type: 0, x: 177, y: 436 },

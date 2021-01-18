@@ -1,4 +1,6 @@
-export const ring = [
+import { EmitterSpec } from "../emitter";
+
+export const ringBackup1: EmitterSpec[] = [
   { type: 0, x: 234, y: 213 },
   { type: 0, x: 228, y: 183 },
   { type: 0, x: 236, y: 144 },
@@ -168,32 +170,7 @@ export const ring = [
   { type: 0, x: 203, y: 329 },
   { type: 0, x: 217, y: 278 },
   { type: 0, x: 213, y: 301 },
-  { type: 0, x: 757, y: 398 },
-  { type: 0, x: 769, y: 411 },
-  { type: 0, x: 786, y: 428 },
-  { type: 0, x: 796, y: 442 },
-  { type: 0, x: 802, y: 459 },
-  { type: 0, x: 802, y: 477 },
-  { type: 0, x: 798, y: 493 },
-  { type: 0, x: 699, y: 581 },
-  { type: 0, x: 703, y: 561 },
-  { type: 0, x: 713, y: 551 },
-  { type: 0, x: 734, y: 542 },
-  { type: 0, x: 750, y: 537 },
-  { type: 0, x: 765, y: 531 },
-  { type: 0, x: 779, y: 515 },
-  { type: 0, x: 787, y: 504 },
-  { type: 0, x: 749, y: 413 },
-  { type: 0, x: 738, y: 431 },
-  { type: 0, x: 734, y: 448 },
-  { type: 0, x: 734, y: 469 },
-  { type: 0, x: 745, y: 484 },
-  { type: 0, x: 750, y: 500 },
-  { type: 0, x: 757, y: 519 },
-  { type: 0, x: 765, y: 540 },
-  { type: 0, x: 768, y: 561 },
-  { type: 0, x: 764, y: 580 },
-  { type: 0, x: 754, y: 596 },
-  { type: 0, x: 737, y: 602 },
-  { type: 0, x: 714, y: 604 },
+
+  { type: 0, x: 516, y: 405 },
+  { type: 0, x: 509, y: 580 },
 ];

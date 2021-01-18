@@ -1,4 +1,6 @@
-export const seniors = [
+import { EmitterSpec } from "../emitter";
+
+export const seniors: EmitterSpec[] = [
   { type: 0, x: 327, y: 181 },
   { type: 0, x: 309, y: 162 },
   { type: 0, x: 286, y: 158 },

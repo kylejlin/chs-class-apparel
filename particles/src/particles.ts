@@ -1,4 +1,5 @@
 import { getType0Emitter, Emitter, EmitterSpec, fromSpec } from "./emitter";
+import * as presets from "./presets";
 
 export function startAnimationLoop(
   canvas: HTMLCanvasElement,
@@ -109,7 +110,7 @@ export function startAnimationLoop(
   return getSceneModifier();
 
   function getSceneModifier(): SceneModifier {
-    return { pushEmitter, popEmitter };
+    return { pushEmitter, popEmitter, loadPreset };
 
     function pushEmitter(type: 0, x: number, y: number): void {
       emitters.push(getType0Emitter(x, y));
@@ -117,6 +118,40 @@ export function startAnimationLoop(
 
     function popEmitter(): void {
       emitters.pop();
+    }
+
+    function loadPreset(type: EmitterPreset): EmitterSpec[] {
+      let specs: EmitterSpec[];
+      switch (type) {
+        case "seniors":
+          specs = presets.seniors;
+          break;
+        case "21":
+          specs = presets._21;
+          break;
+        case "cupertino":
+          specs = presets.cupertino;
+          break;
+        case "high":
+          specs = presets.high;
+          break;
+        case "school":
+          specs = presets.school;
+          break;
+        case "ring":
+          specs = presets.ring;
+          break;
+        case "2021":
+          specs = presets._2021;
+          break;
+      }
+      writeSpecs(specs);
+      return specs;
+    }
+
+    function writeSpecs(specs: EmitterSpec[]): void {
+      const newEmitters = specs.map(fromSpec);
+      emitters.splice(0, emitters.length, ...newEmitters);
     }
   }
 }
@@ -163,7 +198,17 @@ function getStyle(color: Rgba): string {
   );
 }
 
+export type EmitterPreset =
+  | "seniors"
+  | "21"
+  | "cupertino"
+  | "high"
+  | "school"
+  | "ring"
+  | "2021";
+
 export interface SceneModifier {
   pushEmitter(type: 0, localX: number, localy: number): void;
   popEmitter(): void;
+  loadPreset(type: EmitterPreset): EmitterSpec[];
 }

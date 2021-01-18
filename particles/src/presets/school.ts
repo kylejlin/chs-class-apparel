@@ -1,4 +1,6 @@
-export const school = [
+import { EmitterSpec } from "../emitter";
+
+export const school: EmitterSpec[] = [
   { type: 0, x: 269, y: 101 },
   { type: 0, x: 262, y: 88 },
   { type: 0, x: 244, y: 79 },

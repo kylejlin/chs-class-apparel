@@ -1,4 +1,6 @@
-export const cupertino = [
+import { EmitterSpec } from "../emitter";
+
+export const cupertino: EmitterSpec[] = [
   { type: 0, x: 257, y: 149 },
   { type: 0, x: 242, y: 141 },
   { type: 0, x: 224, y: 137 },
